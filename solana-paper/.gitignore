@@ -1,9 +1,7 @@
-.env
-.env.*
 __pycache__/
-*.py[cod]
-.venv/
-state/
-logs/
-*.sqlite
-*.sqlite3
+*.pyc
+data/
+.env
+*.sqlite3*
+*.worker.lock
+bot-reviews/
