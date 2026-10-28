@@ -1,6 +1,9 @@
 # Solana Paper Desk
 
 An isolated, paper-only research desk alongside the original trading application.
+Repository review found the tracked original application documents Monad/Kuru
+trading. No Bitcoin script appeared in this branch tree; any separate or unpushed
+Bitcoin files were not available to inspect. Existing application files are unchanged.
 No wallet libraries, signing keys, swaps, order endpoints, transfers, or live mode
 exist in this implementation. Changing `PAPER` does not enable real trades.
 
