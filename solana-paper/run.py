@@ -7,7 +7,7 @@ from pathlib import Path
 import time
 from desk import Desk, Store
 from grok import Grok, BotReviews
-from providers import MarketData, DataError
+from providers import MarketData, DataError, rpc_call
 from screening import screen_13
 import bridge as bridgecore
 
@@ -72,10 +72,47 @@ def exit_monitor(desk, market, clock=time.time):
             desk.monitor(market.quote(mint, p['pair']), clock())
         except Exception:
             desk.unavailable(mint, clock())
-    with desk.store.transaction() as s:
-        s['heartbeat'] = clock()
-        s['last_exit_check'] = clock()
+    record_monitor(desk, clock())
     return checked
+
+
+MISSED_GAP = 90
+STALE_AFTER = 120
+
+
+def record_monitor(desk, now):
+    with desk.store.transaction() as s:
+        s['heartbeat'] = now
+        m = s.setdefault('monitor', dict(last_success_at=None, missed=[], missed_count=0, last_skipped_locked_at=None))
+        last = m.get('last_success_at')
+        if isinstance(last, (int, float)) and now - last > MISSED_GAP:
+            m['missed'].append(dict(start=last, end=now, gap_seconds=round(now - last, 1)))
+            m['missed'] = m['missed'][-200:]
+            m['missed_count'] = m.get('missed_count', 0) + 1
+        m['last_success_at'] = now
+
+
+def record_skipped_locked(db, now):
+    store = Store(db)
+    try:
+        with store.transaction() as s:
+            s.setdefault('monitor', dict(last_success_at=None, missed=[], missed_count=0, last_skipped_locked_at=None))['last_skipped_locked_at'] = now
+    finally:
+        store.close()
+
+
+def monitor_status(state, now):
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    m = state.get('monitor') or {}
+    last = m.get('last_success_at')
+    age = None if last is None else now - last
+    return dict(last_success_at=last,
+                last_success_at_et=None if last is None else datetime.fromtimestamp(last, ZoneInfo('America/New_York')).isoformat(),
+                age_seconds=None if age is None else round(age, 1),
+                status='ok' if age is not None and age <= STALE_AFTER else 'stale',
+                missed_count=m.get('missed_count', 0), missed_intervals=m.get('missed', [])[-20:],
+                last_skipped_locked_at=m.get('last_skipped_locked_at'))
 
 
 def research_capacity(desk, now):
@@ -165,7 +202,8 @@ def consume(desk, market, bot, queue_dir, clock=time.time):
                 try:
                     review = bot.review(q, clock())
                 except DataError as error:
-                    desk.save_review(mint, dict(verdict='SKIP', invalid=str(error)))
+                    with desk.store.transaction() as s_:
+                        s_['reviews'][mint] = dict(status='invalid_review_skip', error=str(error)[:200], at=clock())
                     reason = 'invalid_review_skip:' + str(error)
                 else:
                     desk.save_review(mint, review)
@@ -192,6 +230,9 @@ def main(argv=None):
     parser.add_argument('--review-dir', help='Explicitly trust local JSON social reviews from an existing Bot')
     parser.add_argument('--queue-dir', help='Default: <db dir>/queue')
     parser.add_argument('--report', action='store_true')
+    parser.add_argument('--monitor-status', action='store_true', help='Print exit-monitor health JSON')
+    parser.add_argument('--rpc-creator', action='store_true',
+                        help='Enable read-only public RPC creator-holdings source for dev_pct (default OFF; also SOLANA_RPC_CREATOR_CHECK=yes)')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--exit-only', action='store_true', help='Protective exit monitoring only')
     mode.add_argument('--prepare-queue', action='store_true', help='Exits, then queue 13-check passers for research')
@@ -202,6 +243,13 @@ def main(argv=None):
         store = Store(args.db)
         print(json.dumps(Desk(store).report(), indent=2, allow_nan=False))
         store.close()
+        return
+    if args.monitor_status:
+        store = Store(args.db)
+        try:
+            print(json.dumps(monitor_status(store.read(), time.time()), indent=2))
+        finally:
+            store.close()
         return
     Path(args.db).parent.mkdir(parents=True, exist_ok=True)
     scheduled = args.exit_only or args.prepare_queue or args.consume
@@ -217,11 +265,16 @@ def main(argv=None):
                 if not scheduled:
                     raise SystemExit('A paper worker is already running for this account')
                 if time.monotonic() >= deadline:
+                    try:
+                        record_skipped_locked(args.db, time.time())
+                    except Exception:
+                        pass
                     print(json.dumps(dict(status='skipped: locked')))
                     return
                 time.sleep(0.5)
         store = Store(args.db)
-        desk, market = Desk(store), MarketData()
+        use_rpc = args.rpc_creator or os.environ.get('SOLANA_RPC_CREATOR_CHECK') == 'yes'
+        desk, market = Desk(store), (MarketData(rpc=rpc_call()) if use_rpc else MarketData())
         try:
             if args.exit_only:
                 print(json.dumps(dict(mode='exit-only', exits_checked=exit_monitor(desk, market))))

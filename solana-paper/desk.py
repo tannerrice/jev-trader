@@ -217,4 +217,6 @@ class Desk:
             positions=s['positions'], trades=s['trades'][-100:], checks=s['checks'][-100:],
             reviews=dict(list(s['reviews'].items())[-100:]),
             rejection_counts=dict(Counter(c['reason'] for c in s['checks'])), errors=s['errors'],
+            monitor_last_success=(s.get('monitor') or {}).get('last_success_at'),
+            monitor_missed_count=(s.get('monitor') or {}).get('missed_count', 0),
             today=s['days'].get(day(now), {}), equity_basis='Last observed prices less sell fee; stale marks are not executable quotes')

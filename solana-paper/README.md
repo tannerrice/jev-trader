@@ -56,6 +56,17 @@ SKIP, low-confidence or social_ok=false reviews never enter. Evidence is re-fetc
 before the review is read and again right before entry. `--lock-wait N` lets a
 scheduled run wait N seconds for the lock. Rejection root causes: INVESTIGATION.md.
 
+Exit-monitor health: every scheduled mode records the last successful exit check and
+any gap >90 s between successes (last 200) in the account state;
+`python3 run.py --monitor-status` prints it (status `stale` if >120 s). The dashboard
+and `/api/report` show `monitor_last_success` / `monitor_missed_count`.
+
+Optional RPC creator-holdings source (default OFF): `--rpc-creator`; see INVESTIGATION.md.
+
+`test_flow_fixture.py` covers queue → review → consume → entry → exits with FIXTURE
+data on a temp TEST account. **A real-candidate end-to-end run is still unverified**
+(no live token has passed all 13 checks yet).
+
 Dashboard auth: `SOLANA_DASH_TOKEN=<secret from a secret store> python3 server.py --host 0.0.0.0`
 requires `Authorization: Bearer <token>` or a cookie set by visiting `/login?token=<token>`
 once. Non-loopback binds are refused without a token. Use a URL-safe token
@@ -156,7 +167,7 @@ See [INTEGRATION.md](INTEGRATION.md) for Bot setup and required account actions.
 
 ## Validation and current limits
 
-59 offline tests cover mechanical gates, adapters, AI contracts, risk controls,
+76 offline tests cover mechanical gates, adapters, AI contracts, risk controls,
 persistence, partial/full exits, outages, blocked fills, and HTTP read-only routes.
 A public-data cycle reached both providers, screened nine candidates and made
 zero simulated fills or paid calls. Eight lacked required numeric evidence; one

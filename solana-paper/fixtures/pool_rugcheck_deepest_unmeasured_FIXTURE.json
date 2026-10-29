@@ -1,0 +1,228 @@
+{
+ "_label": "FIXTURE: trimmed live DexScreener+Rugcheck payloads 2026-10-29; Rugcheck deepest market is the pool DexScreener leaves unmeasured.",
+ "pairs": [
+  {
+   "chainId": "solana",
+   "dexId": "pumpfun",
+   "pairAddress": "CAfpCcnRrfNdBdXQ2NHPcXhsLoh79a4U4JVT4FonNEvU",
+   "baseToken": {
+    "address": "13paEpNnhRi5mKA8kaPZA1K3EZutGZ7UzVuHjHXapump",
+    "symbol": "hyper"
+   },
+   "priceUsd": "0.00001174",
+   "txns": {
+    "h1": {
+     "buys": 818,
+     "sells": 571
+    }
+   },
+   "pairCreatedAt": 1793281913000
+  },
+  {
+   "chainId": "solana",
+   "dexId": "meteora",
+   "pairAddress": "EaMSRGy5XAZ8zfV4M4TQPe4wM59HT6g46qB5tzD3cV1",
+   "baseToken": {
+    "address": "13paEpNnhRi5mKA8kaPZA1K3EZutGZ7UzVuHjHXapump",
+    "symbol": "hyper"
+   },
+   "priceUsd": "0.00001282",
+   "txns": {
+    "h1": {
+     "buys": 5,
+     "sells": 4
+    }
+   },
+   "liquidity": {
+    "usd": 19.34,
+    "base": 758030,
+    "quote": 0.09545
+   },
+   "pairCreatedAt": 1793282313000
+  }
+ ],
+ "rug": {
+  "mint": "13paEpNnhRi5mKA8kaPZA1K3EZutGZ7UzVuHjHXapump",
+  "creator": "CqVEzqShnkdXRbjvd5XGVWAreixzXwvywcx9Qsdc6evv",
+  "creatorBalance": 0,
+  "token": {
+   "mintAuthority": null,
+   "supply": 999998470292872,
+   "decimals": 6,
+   "isInitialized": true,
+   "freezeAuthority": null
+  },
+  "rugged": false,
+  "score_normalised": 1,
+  "graphInsidersDetected": 0,
+  "risks": [],
+  "topHolders": [
+   {
+    "address": "2t3dXQAVHLHToSoE9EaBU9XbozUdnMsNrVmHmCdSn6Gh",
+    "owner": "CAfpCcnRrfNdBdXQ2NHPcXhsLoh79a4U4JVT4FonNEvU",
+    "pct": 49.85118564818642,
+    "insider": false
+   },
+   {
+    "address": "E348LGrosvhx9V9YKoCVqgEMv4YGJrsWcKRv8VYUoktV",
+    "owner": "pKQLRpVuEjqZFJuayuE33Gmp4cURdSFyek87gBiDbQY",
+    "pct": 5.017509947480532,
+    "insider": false
+   },
+   {
+    "address": "AyrUvGHZSqtnAyVxd3cTGAtkrJGpJjPtrpRsdrNMoPSw",
+    "owner": "pwZpq97vcUqG5r79PMYJ2rPdJeVfuqdTaxmNvj5KYMR",
+    "pct": 3.130129590187946,
+    "insider": false
+   },
+   {
+    "address": "EuRnJoWqBFaSWeqGYvBzbZfw6M2pBzCmc6JYPosZYdgY",
+    "owner": "FYUfct4mjaY67e1VMdC4ETgSfCKyDV5se5FYUiqzHS8U",
+    "pct": 2.767797514835387,
+    "insider": false
+   },
+   {
+    "address": "E3wrpmdzyca4BQs1Hs5B8CT7ZTVS2Z6HKHyUzMkgu9W9",
+    "owner": "LeenseyyUU3ccdBPCFCrrZ8oKU2B3T2uToGGZ7eVABY",
+    "pct": 2.7280273582671954,
+    "insider": false
+   },
+   {
+    "address": "GFMvZURygEGJLHokFCuxuwSFdQJd2XpWhVZFKjoLV2DE",
+    "owner": "7Pyp4tuYdRajTwyeCkq64Vx6qakmWnCcJj32xArDHdJU",
+    "pct": 2.3403786293168714,
+    "insider": false
+   },
+   {
+    "address": "3YugZYJTV79ktCp41Y8Q6HFcSAqgCBHGjbnpVenxur5u",
+    "owner": "6NZWg24HVWuhPrNQuJ5bdxGYmUTrB62tAQEmHnyErErL",
+    "pct": 1.9705865638775129,
+    "insider": false
+   },
+   {
+    "address": "UxSUrLHdGyyBQa737UoCDVen58T245J8wBb4y2yX9nE",
+    "owner": "HmytQ4aW9v7hxar9NLqBPfuLU3cP7NypzR51XWpschjn",
+    "pct": 1.8822132245817862,
+    "insider": false
+   },
+   {
+    "address": "AiUmy2Rj76XYMgFowrba86kr7Li3LG1xRPsgyWd5ThtM",
+    "owner": "5GKkHb3a5dNjnZR13CVn4zpnopS8QoQX6Am8vovQSU4",
+    "pct": 1.722946770971257,
+    "insider": false
+   },
+   {
+    "address": "3q65HnFwDCSJdAVTsG7EaCEoEka1w93Qmyp9mHtVLxNu",
+    "owner": "EdDntDFf64rg78vqkvon1GttGQfSe6kmurQB2GrC9xWo",
+    "pct": 1.5053655601370275,
+    "insider": false
+   },
+   {
+    "address": "3JxtYN7jzzyP9qkNSihbPRQCRiFiRtGLmCrDZyJji7Cr",
+    "owner": "BoWt2S4EpXBuq9yaSjAs8sqKXwB2cYwb9NrdeRn37LsL",
+    "pct": 1.4877412754123336,
+    "insider": false
+   },
+   {
+    "address": "5txZapA4fyGtGf5VTYhtqd5HmvoNZhLFAz57io2dZs4V",
+    "owner": "EVMUxiHYhok9piPQ2hAYC9zjVbZuRnKztbuv6viAt9nJ",
+    "pct": 1.4821866870459401,
+    "insider": false
+   },
+   {
+    "address": "B3kseddiBU7CCmAhksTqJuJ7nRqXdBSq19R4Q5vTThm6",
+    "owner": "9ow7pTc6LazfLU7MHcw6rmzGpmUb4F7nDniVscTQVtup",
+    "pct": 1.4689855846915199,
+    "insider": false
+   },
+   {
+    "address": "DBwaz8vroyQaMRHVfBfByUZBqYx6ULmYhLzFcwZjCSJt",
+    "owner": "4kKzULJw8vzDHWjveR3Vf4Vixh4RyQCUdgmGA4YPBG6q",
+    "pct": 1.455168966675841,
+    "insider": false
+   },
+   {
+    "address": "3GjbfYqfrUZzSNnMGA4Bn1pS4GzWUyxjzR8b9pT9PMs4",
+    "owner": "DReiUKdNNWJtG48ygh5SjteqiZ3bV15wgAHmicaqrnQN",
+    "pct": 1.351282927310326,
+    "insider": false
+   },
+   {
+    "address": "AX5ZqD73LMJjFsZFXozJzK284ZxGRyUwQfu6aB3Dyp6L",
+    "owner": "47q7pz6sy8CRckKRd7Qqm9ryLYM7jKHZ1KVpp2nNrzqK",
+    "pct": 1.2095221983089282,
+    "insider": false
+   },
+   {
+    "address": "DfwWEg7XCM2aTueAews5q9L5vYmkpjGB13gXoYjGS1ah",
+    "owner": "7rhAS8nVfQqgNiJg8tFbvEJhwKbeSuBEfSeFAvKhp8ST",
+    "pct": 1.1571006552727203,
+    "insider": false
+   },
+   {
+    "address": "DS8Efqi36yUQqtMR1GB8Z74HJHpQuS6HvjFHEADUTKL2",
+    "owner": "HHn8v2t68ZAUfjo62JW6qyK8SHatoC9i5cZnzZL2LPB",
+    "pct": 1.0527987882101106,
+    "insider": false
+   },
+   {
+    "address": "FpYuj6vwhcGVuNNGx5TFiyeyHkTGPkYXmy6AXzYtHJ6s",
+    "owner": "2A8nfkt39WDEDamhHWFYwXChgfiUTH1cNMM7VSgfBKw6",
+    "pct": 0.908462267459306,
+    "insider": false
+   },
+   {
+    "address": "FLKj3Us8Uhuqxkbu4RBm7Zzdon4w6W8Cdhg6Qo6NECH6",
+    "owner": "5kVyHsxbEDavkwAgxVVQ2hmTLWwvUbVCuw2TQckEQKNY",
+    "pct": 0.7911130866227276,
+    "insider": false
+   }
+  ],
+  "knownAccounts": {
+   "3HksVtmANtZkJK9JDwGPkcWCBECo3fV2Kfae6yXyMc1q": {
+    "type": "AMM"
+   },
+   "52dyDsmqLJzJGAPYJGu45eJrivjJnDsYad4ENgz4jeez": {
+    "type": "LOCKER"
+   },
+   "9eifPoJcs6UVZtzxq3CU7gsrMQthgtyTwTgp4Ut4fjZc": {
+    "type": "AMM"
+   },
+   "CAfpCcnRrfNdBdXQ2NHPcXhsLoh79a4U4JVT4FonNEvU": {
+    "type": "AMM"
+   },
+   "CqVEzqShnkdXRbjvd5XGVWAreixzXwvywcx9Qsdc6evv": {
+    "type": "CREATOR"
+   },
+   "E78o3gGJoTAD5EHbm7S6insa3jFG1ak8xerRxXF4U8oV": {
+    "type": "AMM"
+   },
+   "ELwmsRwbwF77jFaPNw2kF7uQ3Jqon99XaGpEEo1xDWAF": {
+    "type": "AMM"
+   },
+   "Fkp6RcayaY1e3f1otJyxyHsqZcvCCFxXjzFNJNknXG5x": {
+    "type": "AMM"
+   }
+  },
+  "markets": [
+   {
+    "pubkey": "CAfpCcnRrfNdBdXQ2NHPcXhsLoh79a4U4JVT4FonNEvU",
+    "marketType": "pump_fun",
+    "lp": {
+     "baseUSD": 3508.802745174297,
+     "quoteUSD": 3212.4230700291955,
+     "lpLockedPct": 100
+    }
+   },
+   {
+    "pubkey": "EaMSRGy5XAZ8zfV4M4TQPe4wM59HT6g46qB5tzD3cV1",
+    "marketType": "meteora_damm_v2",
+    "lp": {
+     "baseUSD": 9.503275812959075,
+     "quoteUSD": 9.302577063254688,
+     "lpLockedPct": 0
+    }
+   }
+  ]
+ }
+}
