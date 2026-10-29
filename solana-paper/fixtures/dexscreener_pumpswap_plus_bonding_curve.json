@@ -1,0 +1,49 @@
+[
+ {
+  "chainId": "solana",
+  "dexId": "pumpswap",
+  "pairAddress": "D5tXS5Yauwk9ny2vGjs85WynMbf5PfuPiA4GxaQGrk6s",
+  "baseToken": {
+   "address": "6tNEpcBbjvEmsS6KuhTXjW6BnXfXi8AHMWBaAQGwpump",
+   "symbol": "CHLOE"
+  },
+  "quoteToken": {
+   "address": "So11111111111111111111111111111111111111112",
+   "symbol": "SOL"
+  },
+  "priceUsd": "0.0001949",
+  "txns": {
+   "h1": {
+    "buys": 2674,
+    "sells": 1613
+   }
+  },
+  "liquidity": {
+   "usd": 37711.4,
+   "base": 104232582,
+   "quote": 172.7509
+  },
+  "pairCreatedAt": 1793282190000
+ },
+ {
+  "chainId": "solana",
+  "dexId": "pumpfun",
+  "pairAddress": "LHjs96Aa9mxHWg2FpfUgHgroysPVJaNfHKokCAt6ZxV",
+  "baseToken": {
+   "address": "6tNEpcBbjvEmsS6KuhTXjW6BnXfXi8AHMWBaAQGwpump",
+   "symbol": "CHLOE"
+  },
+  "quoteToken": {
+   "address": "So11111111111111111111111111111111111111112",
+   "symbol": "SOL"
+  },
+  "priceUsd": "0.00002072",
+  "txns": {
+   "h1": {
+    "buys": 9,
+    "sells": 0
+   }
+  },
+  "pairCreatedAt": 1793282190000
+ }
+]

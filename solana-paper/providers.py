@@ -47,8 +47,17 @@ def normalize_pair(pairs, mint, now, pair_id=None):
              and (pair_id is None or p.get('pairAddress') == pair_id)]
     if not valid:
         raise DataError('no matching base-token pool')
-    p = max(valid, key=lambda x: number(x.get('liquidity', {}).get('usd')))
-    liquidity = number(p.get('liquidity', {}).get('usd'))
+    def liq(x):
+        v = (x.get('liquidity') or {}).get('usd')
+        return v if type(v) in (int, float) and math.isfinite(v) and v >= 0 else None
+    # DexScreener omits `liquidity` for bonding-curve pools (e.g. pumpfun). An
+    # unknown-depth pool must not invalidate a sibling pool with reported depth;
+    # it is ignored (never treated as 0). With no measured pool, reject.
+    measured = [x for x in valid if liq(x) is not None]
+    if not measured:
+        raise DataError('pool liquidity unavailable')
+    p = max(measured, key=liq)
+    liquidity = number(liq(p))
     try:
         price = float(p['priceUsd'])
     except (KeyError, TypeError, ValueError):

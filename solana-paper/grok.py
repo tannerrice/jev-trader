@@ -69,6 +69,11 @@ class BotReviews:
     def enabled(self):
         return self.directory.is_dir()
 
+    def available(self, mint):
+        from providers import mint_id
+        path = self.directory / (mint_id(mint) + '.json')
+        return path.is_file() and not path.is_symlink()
+
     def review(self, snapshot, now=None):
         from providers import mint_id
         path = self.directory / (mint_id(snapshot['mint']) + '.json')

@@ -34,6 +34,33 @@ extend that budget. It sleeps 30 seconds between cycles. At most one AI request
 is issued per cycle. Open positions are refreshed from the original pool.
 Discovery is a limited profile feed, not a complete token-launch feed.
 
+## Scheduled paper operation and research bridge
+
+All scheduled modes take the same worker lock non-blockingly and print
+`{"status": "skipped: locked"}` (exit 0) if another run holds it.
+
+```bash
+cd solana-paper
+python3 run.py --exit-only                      # every minute: protective exits + heartbeat only
+python3 run.py --prepare-queue                  # every 5 min: exits, then queue 13-check passers in data/queue/
+python3 bridge.py list-queue                    # research targets (only queued mints)
+python3 bridge.py write-review < review.json    # validated, atomic, 0600 into bot-reviews/<mint>.json
+python3 run.py --consume                        # exits, re-fetch evidence, enter only on fresh valid BUY
+python3 bridge.py prune                         # drop expired reviews/queue entries
+```
+
+Queueing never reserves research or touches the daily cap. A queued mint with no
+review file is left waiting and is not burned; a review file that is actually read
+(valid or not) consumes the one-attempt-per-mint reservation. Missing, invalid,
+SKIP, low-confidence or social_ok=false reviews never enter. Evidence is re-fetched
+before the review is read and again right before entry. `--lock-wait N` lets a
+scheduled run wait N seconds for the lock. Rejection root causes: INVESTIGATION.md.
+
+Dashboard auth: `SOLANA_DASH_TOKEN=<secret from a secret store> python3 server.py --host 0.0.0.0`
+requires `Authorization: Bearer <token>` or a cookie set by visiting `/login?token=<token>`
+once. Non-loopback binds are refused without a token. Use a URL-safe token
+(`secrets.token_urlsafe`) and put TLS (an authenticated tunnel) in front for phones.
+
 ## Data and 14 checks
 
 The existing `screen_13` mechanical filter is preserved. The 14th gate uses Grok
@@ -129,7 +156,7 @@ See [INTEGRATION.md](INTEGRATION.md) for Bot setup and required account actions.
 
 ## Validation and current limits
 
-33 offline tests cover mechanical gates, adapters, AI contracts, risk controls,
+59 offline tests cover mechanical gates, adapters, AI contracts, risk controls,
 persistence, partial/full exits, outages, blocked fills, and HTTP read-only routes.
 A public-data cycle reached both providers, screened nine candidates and made
 zero simulated fills or paid calls. Eight lacked required numeric evidence; one

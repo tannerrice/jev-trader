@@ -37,8 +37,10 @@ Never create a wallet, request a seed phrase, sign a transaction, buy API credit
 change billing, or call any real order endpoint. Run the paper worker with one
 account and one worker only. Monitor heartbeat and report blocked exits.
 
-The current worker discovers candidates itself; there is no automatic request
-queue to the Bot. A Bot routine must coordinate the candidate feed and prepare
+A file queue now exists: `run.py --prepare-queue` writes data/queue/<mint>.json for
+13-check passers; the Bot researches only those and writes reviews via
+`bridge.py write-review`; `run.py --consume` enters. `run.py --exit-only` runs
+protective exits independently (see README). A Bot routine must coordinate the candidate feed and prepare
 reviews before consumption. This file-based bridge is implemented, while remote
 Bot messaging, authenticated report delivery and routine configuration remain
 integration work after account access. See the official

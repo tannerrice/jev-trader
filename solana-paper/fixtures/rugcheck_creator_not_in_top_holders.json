@@ -1,0 +1,175 @@
+{
+ "mint": "6tNEpcBbjvEmsS6KuhTXjW6BnXfXi8AHMWBaAQGwpump",
+ "creator": "34vTyX6SZHRCjj284cwrBvudRwNUFpETB7AjGJ46vbbA",
+ "creatorBalance": 0,
+ "token": {
+  "mintAuthority": null,
+  "supply": 980878016321238,
+  "decimals": 6,
+  "isInitialized": true,
+  "freezeAuthority": null
+ },
+ "topHolders": [
+  {
+   "address": "FCMd4iXieHVymzwbq1ruav1Gzg5tc873QPP3HtF4UhfF",
+   "owner": "D5tXS5Yauwk9ny2vGjs85WynMbf5PfuPiA4GxaQGrk6s",
+   "pct": 10.843561359670677,
+   "insider": false
+  },
+  {
+   "address": "731tvCLGtGvocf96YkhKEsXFomoLPFBu8CpD8rKcBTkY",
+   "owner": "949kU3JFSyabq44e4hT8tErvhr9pAadfXbuEmQz1vKB8",
+   "pct": 0.747197033327508,
+   "insider": false
+  },
+  {
+   "address": "cbX7a7eJ73DudsgXnfbQaw3JAgG4LFPajfF9oJKPa1x",
+   "owner": "HgaxNF4zJd3ajnW7qDqHzpHpiwH8Tgy8V8qAAxr6wuXb",
+   "pct": 0.7338023636760505,
+   "insider": false
+  },
+  {
+   "address": "FFXxiyU4w7xJu8DxptNyvBuu7jGfu7LLwFUUM6KrmsRH",
+   "owner": "4Lupj9iwHja1GdNZ4xUaUT3Pwn2DJMh6vookP5QvZczL",
+   "pct": 0.725766640051148,
+   "insider": false
+  },
+  {
+   "address": "BmsZTPHqAxCj15JpkWsBiPG314n4FPfSS1Rv3hcLZAxU",
+   "owner": "4bdp4AiwoSaeAm4eJawxx5gC5qRg8jptNFxwFjpPWmos",
+   "pct": 0.7190381430154488,
+   "insider": false
+  },
+  {
+   "address": "8ifkSypJLVCcT2CdDr3fLTfWzj2RnxiZruuS5tGKJYSH",
+   "owner": "8KWFufmLU1ti52MYbaUDK3VSoeEkCRx2xQy1bLAtBorX",
+   "pct": 0.7073874036057103,
+   "insider": false
+  },
+  {
+   "address": "EwNtZXK6uysAupF6Seg9Ct5rNzMuh4B1pQe5thDwW5pY",
+   "owner": "8NPSm3h754kFbGdBTFAhUxTx1kj1fyReQANGK6DXo5SC",
+   "pct": 0.7053129637106952,
+   "insider": false
+  },
+  {
+   "address": "4NWu8CSZKwEPkTgfgeroKGop9D15v5TXxxK7ZFi3h6Uk",
+   "owner": "F1o9DsyhtKtp5BmTpfWT3FsrceUU6YXxx3cvH1k9pAGn",
+   "pct": 0.6909884148370272,
+   "insider": false
+  },
+  {
+   "address": "4nf73uDFmNV98U8fxBvfCgFFLzjtpoiR54iQEu2gQcrs",
+   "owner": "ErxgWvQug5Kd9qJAzRVScfdQtx39oQ3y8o7NTtAbBP5t",
+   "pct": 0.6890700850193634,
+   "insider": false
+  },
+  {
+   "address": "BqKTst8nhMajqncaHr7NgyPWvRuz887WqQPtjpQAVwta",
+   "owner": "47JeQU1tFELa1ZuqAFvEVXUn2dmXBi6Uzgyq3LRPVPVq",
+   "pct": 0.6872575441829729,
+   "insider": false
+  },
+  {
+   "address": "Gwd3A2dXbyRuh7wNZhwmowPiRJJ6bc9kWVTC3Q3z2vAz",
+   "owner": "3i85cn2LubWbR2CksNGDPjoGBmb3rJ2CtyEe8TdPmsVK",
+   "pct": 0.6580497694622706,
+   "insider": false
+  },
+  {
+   "address": "9wDiYnbQH99gNcKeH5QTFpZMkcRQX2gd8TErf3CVcEZA",
+   "owner": "2VmdgVzar2wr51Yo2vkyAUX6ZMbRmPkMSZWiDue2wLUC",
+   "pct": 0.6564381086748988,
+   "insider": false
+  },
+  {
+   "address": "7yEo6M5HBBEiemLe1HUi9J6GLbauHCjHSEgwmQeNEMWQ",
+   "owner": "Cf4Eiu3XfxTMhiot1KHM9jgo6hHu2TGeM6CZHGne4ofz",
+   "pct": 0.6557883662165142,
+   "insider": false
+  },
+  {
+   "address": "GiKR8ChD1PhTgjGzv62meKFKZmxD3PgsVnmM1fVg829h",
+   "owner": "FxQVzbQunnyoUCPczno7RjvDzQo78t8Nbwb85QRv4gh4",
+   "pct": 0.649403359683501,
+   "insider": false
+  },
+  {
+   "address": "CmmmNhmKdk51SmKfJ4UxPftkeAEaisTAcvRH3nbomRXe",
+   "owner": "2MuEecBbrFjKohELaeauTuX2aBWBvZyDX91gjCN7VGaU",
+   "pct": 0.6425221907133633,
+   "insider": false
+  },
+  {
+   "address": "6mWhoz6qpPzr7xq48ydT9QBy8kBvZWsdLV1772Lxpy3K",
+   "owner": "5g52EDiL4W1Dr83G51qhigdJthAFYmdVvzaVbFCPn8jp",
+   "pct": 0.6356505764527246,
+   "insider": false
+  },
+  {
+   "address": "2YHU3VMKfSjuJAoQbpS8WatLQ3mzGa7PDgUbtmxhq8qu",
+   "owner": "7wofJEX9xxJhKJ9hprFAduaTEWQ1k6xFSsqhaH4kY98x",
+   "pct": 0.6345218019322675,
+   "insider": false
+  },
+  {
+   "address": "JDLvvnstyBeW8sbGwtSsSC4ty8c1P2jUNzaHNK7Nz7vF",
+   "owner": "DtyqKkjK3GBp6MGBn8wxe72hzWPKDho2B5uFFqJ3BELW",
+   "pct": 0.6280061923645566,
+   "insider": false
+  },
+  {
+   "address": "HeDP1vSPix5UZs6PpeEmTMpEJtMiom2wmAu2SJ1CyPDB",
+   "owner": "93d6CcrQUnG4ZiGfgRMYkbLDzzKxFv5TZL4vhFt6L3nY",
+   "pct": 0.6273449348276279,
+   "insider": false
+  },
+  {
+   "address": "EkURLLrZkBtWwS5XWdxmYFSWtgKUsF8mB8FSGFmXek9J",
+   "owner": "F3FqpzSkkvwqexfBK9d1J6AVejU4ePELpuVPRupGBffX",
+   "pct": 0.6252427344133159,
+   "insider": false
+  }
+ ],
+ "freezeAuthority": null,
+ "mintAuthority": null,
+ "risks": [],
+ "score": 1,
+ "score_normalised": 1,
+ "markets": [
+  {
+   "pubkey": "D5tXS5Yauwk9ny2vGjs85WynMbf5PfuPiA4GxaQGrk6s",
+   "marketType": "pump_fun_amm",
+   "lp": {
+    "baseUSD": 16293.513079593367,
+    "quoteUSD": 17085.72293351801,
+    "lpLockedPct": 100
+   }
+  }
+ ],
+ "knownAccounts": {
+  "34vTyX6SZHRCjj284cwrBvudRwNUFpETB7AjGJ46vbbA": {
+   "type": "CREATOR"
+  },
+  "3m8cE3atCGXETdYwsENwutomspYuXb1RPWAx4zqahyHi": {
+   "type": "AMM"
+  },
+  "3xK4dSJY28HCfpGrteSC97PGYmuhCSbf4KWCsnjQK5Hi": {
+   "type": "LOCKER"
+  },
+  "5ShB6K5pAngBaYBzjAdgrafMY6hXx9G16aWeXdmvPGe8": {
+   "type": "AMM"
+  },
+  "D5tXS5Yauwk9ny2vGjs85WynMbf5PfuPiA4GxaQGrk6s": {
+   "type": "AMM"
+  },
+  "LHjs96Aa9mxHWg2FpfUgHgroysPVJaNfHKokCAt6ZxV": {
+   "type": "AMM"
+  },
+  "i4d4X5xBCduwLHEhbFtwbjAMqyRuCEa9nY33gS3iaxL": {
+   "type": "AMM"
+  }
+ },
+ "rugged": false,
+ "graphInsidersDetected": 41
+}

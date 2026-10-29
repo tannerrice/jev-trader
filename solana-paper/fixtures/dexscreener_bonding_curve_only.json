@@ -1,0 +1,23 @@
+[
+ {
+  "chainId": "solana",
+  "dexId": "pumpfun",
+  "pairAddress": "8rZgoyjgV5Lni5YdkJUNSatBnu8em6LQK3y9Rnw9i9c6",
+  "baseToken": {
+   "address": "ECpS53To2E33UCmskCjumVnVoxxX8JKWpsYHCtXqpump",
+   "symbol": "MUGI"
+  },
+  "quoteToken": {
+   "address": "So11111111111111111111111111111111111111112",
+   "symbol": "SOL"
+  },
+  "priceUsd": "0.000009839",
+  "txns": {
+   "h1": {
+    "buys": 978,
+    "sells": 702
+   }
+  },
+  "pairCreatedAt": 1793283287000
+ }
+]
