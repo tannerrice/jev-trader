@@ -246,6 +246,8 @@ def main(argv=None):
                         help='Enable read-only public RPC creator-holdings source for dev_pct (default OFF; also SOLANA_RPC_CREATOR_CHECK=yes)')
     parser.add_argument('--gecko-crosscheck', action='store_true',
                         help='Enable GeckoTerminal leftover-pool cross-check (default OFF pending review; also SOLANA_GECKO_CROSSCHECK=yes)')
+    parser.add_argument('--pumpfun-verify', action='store_true',
+                        help='Enable read-only pump.fun leftover-curve migration verifier (default OFF pending review; also SOLANA_PUMPFUN_VERIFY=yes)')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--exit-only', action='store_true', help='Protective exit monitoring only')
     mode.add_argument('--prepare-queue', action='store_true', help='Exits, then queue 13-check passers for research')
@@ -293,7 +295,11 @@ def main(argv=None):
         if args.gecko_crosscheck or os.environ.get('SOLANA_GECKO_CROSSCHECK') == 'yes':
             from gecko import GeckoCrossCheck
             gecko = GeckoCrossCheck(evidence_path=str(Path(args.db).parent / 'gecko_evidence.jsonl'))
-        desk, market = Desk(store), MarketData(rpc=rpc_call() if use_rpc else None, gecko=gecko)
+        pumpfun = None
+        if args.pumpfun_verify or os.environ.get('SOLANA_PUMPFUN_VERIFY') == 'yes':
+            from pumpfun_verify import PumpfunVerifier
+            pumpfun = PumpfunVerifier(evidence_path=str(Path(args.db).parent / 'pumpfun_evidence.jsonl'))
+        desk, market = Desk(store), MarketData(rpc=rpc_call() if use_rpc else None, gecko=gecko, pumpfun=pumpfun)
         try:
             if args.exit_only:
                 print(json.dumps(dict(mode='exit-only', exits_checked=exit_monitor(desk, market, lock_wait=lock_wait), lock_wait_seconds=round(lock_wait, 1))))

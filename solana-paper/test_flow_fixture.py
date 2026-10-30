@@ -1,12 +1,14 @@
 """FIXTURE/TEST end-to-end flow on a temporary TEST account.
 
 queue -> bridge write-review -> consume -> simulated entry -> exits.
-All market data below is synthetic FIXTURE data; nothing touches the network
-or the real ledger (data/account.sqlite3), which is hashed before and after.
+All market data below is synthetic FIXTURE data; nothing touches the network.
+Isolation: each test gets an explicitly injected temp account and runs inside a
+testguard.LedgerGuard that raises on any open of a protected ledger dir (the real
+data/ dir by default) and proves afterwards that only the temp account was used.
+(The old before/after hash of the live ledger failed whenever the live exit loop
+wrote to it; see test_isolation.py.)
 """
-import hashlib
 import json
-import tempfile
 import unittest
 from pathlib import Path
 import bridge
@@ -14,18 +16,13 @@ import run
 from desk import Desk, Store
 from grok import BotReviews
 from test_screening import CLEAN
+import testguard
 
-REAL_DB = Path(__file__).parent / 'data' / 'account.sqlite3'
 FIXTURE_MINT = 'FixtureTestMint1111111111111111111111111111'[:43]
 T0 = 1_800_000_000
 
-
-def digest():
-    h = hashlib.sha256()
-    for p in sorted(REAL_DB.parent.glob('account.sqlite3*')) if REAL_DB.parent.exists() else []:
-        if p.suffix != '.lock':
-            h.update(p.name.encode()); h.update(p.read_bytes())
-    return h.hexdigest()
+# Protected dirs for the guard; test_isolation.py swaps in a stand-in "live" copy.
+PROTECTED = [testguard.REAL_DATA_DIR]
 
 
 def fixture_quote(now, price=1.0, **changes):
@@ -47,16 +44,25 @@ class FixtureMarket:
 
 class FlowFixtureTests(unittest.TestCase):
     def setUp(self):
-        self.real_before = digest()
-        self.tmp = tempfile.TemporaryDirectory(prefix='FIXTURE_TEST_')
+        self.tmp = testguard.temp_root()
+        self.addCleanup(self.tmp.cleanup)
         t = Path(self.tmp.name)
-        self.db, self.queue, self.reviews = str(t / 'TEST_account.sqlite3'), t / 'TEST_queue', t / 'TEST_reviews'
+        self.guard = testguard.LedgerGuard(t, protected=PROTECTED)
+        self.db = self.guard.account_path('TEST_account.sqlite3')   # explicit injection; never a default
+        self.queue, self.reviews = t / 'TEST_queue', t / 'TEST_reviews'
+        self.guard.__enter__()
+        self.addCleanup(self.guard.__exit__, None, None, None)
         self.store = Store(self.db); self.desk = Desk(self.store)
         self.now = T0
 
     def tearDown(self):
-        self.store.close(); self.tmp.cleanup()
-        self.assertEqual(digest(), self.real_before, 'real ledger must be untouched')
+        written = self.store.read()
+        self.store.close()
+        self.guard.__exit__(None, None, None)
+        # Safety assertions: only the injected temp account was used, and it was the one written.
+        self.guard.assert_isolated(self, self.db)
+        self.assertTrue(written['trades'], 'temp account was not the account written')
+        self.assertTrue(all(testguard.inside(p, self.tmp.name) for p in (self.queue, self.reviews)))
 
     def clock(self):
         return self.now

@@ -21,6 +21,15 @@ python3 solana-paper/server.py
 python3 solana-paper/run.py --report
 ```
 
+Preferred suite command: `python3 solana-paper/run_tests.py`. It streams the normal
+`unittest -v` output and also saves every run under `solana-paper/data/test-runs/<UTC
+stamp>/` (gitignored): `output.txt` (full output), `summary.json` (exit code, counts,
+failing test names and tracebacks), plus `latest-summary.json` / `latest-summary.txt`.
+Its exit code is the suite's. Override the location with `--logs-dir` or
+`SOLANA_TEST_LOG_DIR`. Fixture tests use explicitly injected temp accounts inside
+`testguard.LedgerGuard`, which raises on any open of the real `data/` dir; they no
+longer hash the live ledger (which the live exit loop legitimately changes).
+
 The read-only dashboard is at http://127.0.0.1:8787. It refreshes every 15 seconds.
 It includes account equity, realized/unrealized P&L, positions, stale-feed status,
 simulated fills, CSV export of the latest 100 fills, AI evidence, and screening

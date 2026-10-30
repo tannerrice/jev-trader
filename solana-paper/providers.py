@@ -252,11 +252,23 @@ def rpc_call(url=PUBLIC_RPC, post=request_json):
     return call
 
 
+def pumpfun_first(pumpfun_resolve, pairs, fallback=None):
+    """Route a leftover DexScreener `pumpfun` pool to the pump.fun verifier; any other
+    venue goes to `fallback` (gecko, if enabled) or stays rejected as before."""
+    def resolve(leftover, rc_depth):
+        dex = [p.get('dexId') for p in pairs if isinstance(p, dict) and p.get('pairAddress') == leftover]
+        if dex == ['pumpfun'] or fallback is None:
+            return pumpfun_resolve(leftover, rc_depth)
+        return fallback(leftover, rc_depth)
+    return resolve
+
+
 class MarketData:
-    def __init__(self, get=request_json, clock=time.time, rpc=None, gecko=None):
+    def __init__(self, get=request_json, clock=time.time, rpc=None, gecko=None, pumpfun=None):
         """rpc: optional JSON-RPC callable enabling the RPC creator-holdings source (default OFF).
-        gecko: optional gecko.GeckoCrossCheck for unmeasured leftover pools (default OFF)."""
-        self.get, self.clock, self.rpc, self.gecko = get, clock, rpc, gecko
+        gecko: optional gecko.GeckoCrossCheck for unmeasured leftover pools (default OFF).
+        pumpfun: optional pumpfun_verify.PumpfunVerifier for leftover pump.fun curves (default OFF)."""
+        self.get, self.clock, self.rpc, self.gecko, self.pumpfun = get, clock, rpc, gecko, pumpfun
         self.last_pairs = []
 
     def discover(self):
@@ -275,5 +287,7 @@ class MarketData:
         d = self.get('https://api.rugcheck.xyz/v1/tokens/' + mint_id(mint) + '/report')
         source = None if self.rpc is None else (lambda m, c: rpc_creator_pct(m, c, self.rpc))
         resolver = None if self.gecko is None else self.gecko.resolver(mint, q, self.last_pairs)
+        if self.pumpfun is not None:
+            resolver = pumpfun_first(self.pumpfun.resolver(mint, q, self.last_pairs), self.last_pairs, resolver)
         return {**q, **normalize_rug(d, mint, q['pair'], self.clock(), q['unmeasured_pools'], source,
                                      resolve_unmeasured=resolver)}
