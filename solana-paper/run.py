@@ -63,7 +63,7 @@ def cycle(desk, market, ai, clock=time.time):
         s['heartbeat'] = clock()
 
 
-def exit_monitor(desk, market, clock=time.time):
+def exit_monitor(desk, market, clock=time.time, lock_wait=0.0):
     """Protective exits only. Never discovers or reads research. Runs while halted."""
     checked = 0
     for mint, p in list(desk.store.read()['positions'].items()):
@@ -72,7 +72,7 @@ def exit_monitor(desk, market, clock=time.time):
             desk.monitor(market.quote(mint, p['pair']), clock())
         except Exception:
             desk.unavailable(mint, clock())
-    record_monitor(desk, clock())
+    record_monitor(desk, clock(), lock_wait=lock_wait)
     return checked
 
 
@@ -80,7 +80,12 @@ MISSED_GAP = 90
 STALE_AFTER = 120
 
 
-def record_monitor(desk, now):
+LOCK_DELAY_NOTE = 1.0  # seconds of lock wait worth recording as 'delayed by lock'
+
+
+def record_monitor(desk, now, lock_wait=0.0):
+    """Record a successful check. A gap is still counted as missed (never suppressed);
+    a check that had to wait for the worker lock is additionally recorded as lock-delayed."""
     with desk.store.transaction() as s:
         s['heartbeat'] = now
         m = s.setdefault('monitor', dict(last_success_at=None, missed=[], missed_count=0, last_skipped_locked_at=None))
@@ -89,6 +94,10 @@ def record_monitor(desk, now):
             m['missed'].append(dict(start=last, end=now, gap_seconds=round(now - last, 1)))
             m['missed'] = m['missed'][-200:]
             m['missed_count'] = m.get('missed_count', 0) + 1
+        if lock_wait >= LOCK_DELAY_NOTE:
+            m.setdefault('lock_delayed', []).append(dict(at=now, wait_seconds=round(lock_wait, 1)))
+            m['lock_delayed'] = m['lock_delayed'][-200:]
+            m['lock_delayed_count'] = m.get('lock_delayed_count', 0) + 1
         m['last_success_at'] = now
 
 
@@ -112,7 +121,9 @@ def monitor_status(state, now):
                 age_seconds=None if age is None else round(age, 1),
                 status='ok' if age is not None and age <= STALE_AFTER else 'stale',
                 missed_count=m.get('missed_count', 0), missed_intervals=m.get('missed', [])[-20:],
-                last_skipped_locked_at=m.get('last_skipped_locked_at'))
+                last_skipped_locked_at=m.get('last_skipped_locked_at'),
+                lock_delayed_count=m.get('lock_delayed_count', 0),
+                lock_delayed=m.get('lock_delayed', [])[-20:])
 
 
 def research_capacity(desk, now):
@@ -256,7 +267,8 @@ def main(argv=None):
     queue_dir = Path(args.queue_dir) if args.queue_dir else Path(args.db).parent/'queue'
     review_dir = args.review_dir or str(here/'bot-reviews')
     with open(args.db + '.worker.lock', 'w') as lock:
-        deadline = time.monotonic() + max(0, args.lock_wait)
+        lock_started = time.monotonic()
+        deadline = lock_started + max(0, args.lock_wait)
         while True:
             try:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -272,12 +284,13 @@ def main(argv=None):
                     print(json.dumps(dict(status='skipped: locked')))
                     return
                 time.sleep(0.5)
+        lock_wait = time.monotonic() - lock_started
         store = Store(args.db)
         use_rpc = args.rpc_creator or os.environ.get('SOLANA_RPC_CREATOR_CHECK') == 'yes'
         desk, market = Desk(store), (MarketData(rpc=rpc_call()) if use_rpc else MarketData())
         try:
             if args.exit_only:
-                print(json.dumps(dict(mode='exit-only', exits_checked=exit_monitor(desk, market))))
+                print(json.dumps(dict(mode='exit-only', exits_checked=exit_monitor(desk, market, lock_wait=lock_wait), lock_wait_seconds=round(lock_wait, 1))))
             elif args.prepare_queue:
                 print(json.dumps(prepare_queue(desk, market, queue_dir, review_dir)))
             elif args.consume:
