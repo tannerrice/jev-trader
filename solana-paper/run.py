@@ -244,6 +244,8 @@ def main(argv=None):
     parser.add_argument('--monitor-status', action='store_true', help='Print exit-monitor health JSON')
     parser.add_argument('--rpc-creator', action='store_true',
                         help='Enable read-only public RPC creator-holdings source for dev_pct (default OFF; also SOLANA_RPC_CREATOR_CHECK=yes)')
+    parser.add_argument('--gecko-crosscheck', action='store_true',
+                        help='Enable GeckoTerminal leftover-pool cross-check (default OFF pending review; also SOLANA_GECKO_CROSSCHECK=yes)')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--exit-only', action='store_true', help='Protective exit monitoring only')
     mode.add_argument('--prepare-queue', action='store_true', help='Exits, then queue 13-check passers for research')
@@ -287,7 +289,11 @@ def main(argv=None):
         lock_wait = time.monotonic() - lock_started
         store = Store(args.db)
         use_rpc = args.rpc_creator or os.environ.get('SOLANA_RPC_CREATOR_CHECK') == 'yes'
-        desk, market = Desk(store), (MarketData(rpc=rpc_call()) if use_rpc else MarketData())
+        gecko = None
+        if args.gecko_crosscheck or os.environ.get('SOLANA_GECKO_CROSSCHECK') == 'yes':
+            from gecko import GeckoCrossCheck
+            gecko = GeckoCrossCheck(evidence_path=str(Path(args.db).parent / 'gecko_evidence.jsonl'))
+        desk, market = Desk(store), MarketData(rpc=rpc_call() if use_rpc else None, gecko=gecko)
         try:
             if args.exit_only:
                 print(json.dumps(dict(mode='exit-only', exits_checked=exit_monitor(desk, market, lock_wait=lock_wait), lock_wait_seconds=round(lock_wait, 1))))

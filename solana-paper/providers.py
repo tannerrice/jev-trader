@@ -78,7 +78,7 @@ def normalize_pair(pairs, mint, now, pair_id=None):
                 buys_1h=buys, sells_1h=sells, observed_at=now)
 
 
-def normalize_rug(d, mint, pair, now, unmeasured=(), creator_pct=None):
+def normalize_rug(d, mint, pair, now, unmeasured=(), creator_pct=None, resolve_unmeasured=None):
     if d.get('mint') != mint:
         raise DataError('Rugcheck mint mismatch')
     token = d.get('token')
@@ -109,6 +109,12 @@ def normalize_rug(d, mint, pair, now, unmeasured=(), creator_pct=None):
         by_key.setdefault(m.get('pubkey'), []).append(m)
     for u in unmeasured:
         if u == pair or len(by_key.get(u, [])) != 1 or not depth(by_key[u][0]) < depth(biggest):
+            # Optional GeckoTerminal cross-check (default OFF): only for a leftover
+            # pool Rugcheck does not list at all. It raises DataError unless it
+            # proves the leftover is strictly shallower with established freshness.
+            if resolve_unmeasured is not None and u != pair and u not in by_key:
+                resolve_unmeasured(u, depth(biggest))
+                continue
             raise DataError('ambiguous unmeasured pool')
     if sum(1 for m in markets if depth(m) == depth(biggest)) > 1:
         raise DataError('ambiguous deepest pool')
@@ -247,9 +253,11 @@ def rpc_call(url=PUBLIC_RPC, post=request_json):
 
 
 class MarketData:
-    def __init__(self, get=request_json, clock=time.time, rpc=None):
-        """rpc: optional JSON-RPC callable enabling the RPC creator-holdings source (default OFF)."""
-        self.get, self.clock, self.rpc = get, clock, rpc
+    def __init__(self, get=request_json, clock=time.time, rpc=None, gecko=None):
+        """rpc: optional JSON-RPC callable enabling the RPC creator-holdings source (default OFF).
+        gecko: optional gecko.GeckoCrossCheck for unmeasured leftover pools (default OFF)."""
+        self.get, self.clock, self.rpc, self.gecko = get, clock, rpc, gecko
+        self.last_pairs = []
 
     def discover(self):
         rows = self.get('https://api.dexscreener.com/token-profiles/latest/v1')
@@ -259,10 +267,13 @@ class MarketData:
 
     def quote(self, mint, pair=None):
         rows = self.get('https://api.dexscreener.com/token-pairs/v1/solana/' + mint_id(mint))
+        self.last_pairs = rows if isinstance(rows, list) else []
         return normalize_pair(rows, mint, self.clock(), pair)
 
     def snapshot(self, mint):
         q = self.quote(mint)
         d = self.get('https://api.rugcheck.xyz/v1/tokens/' + mint_id(mint) + '/report')
         source = None if self.rpc is None else (lambda m, c: rpc_creator_pct(m, c, self.rpc))
-        return {**q, **normalize_rug(d, mint, q['pair'], self.clock(), q['unmeasured_pools'], source)}
+        resolver = None if self.gecko is None else self.gecko.resolver(mint, q, self.last_pairs)
+        return {**q, **normalize_rug(d, mint, q['pair'], self.clock(), q['unmeasured_pools'], source,
+                                     resolve_unmeasured=resolver)}
